@@ -4,15 +4,17 @@ import com.cd.evaluation.users.exception.InternalException;
 import com.cd.evaluation.users.model.user.UserModel;
 import com.cd.evaluation.users.service.user.UserService;
 import com.cd.evaluation.users.view.users.UserDTO;
+import com.cd.evaluation.users.view.users.search.UserSearchDTO;
+import com.mongodb.lang.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -50,10 +52,16 @@ public class UserController {
     /**
      * Endpoint to retrieve all the users
      */
-    @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() throws InternalException {
+    @GetMapping()
+    public ResponseEntity<Page<UserModel>> getAllUsers(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
+            @RequestParam(name = "field", defaultValue = "") String field,
+            @RequestParam(name = "sortDirection", defaultValue = "ASC") String sortDirection,
+            @RequestBody @Nullable UserSearchDTO userSearchDTO
+            ) throws InternalException {
         log.info("/api/v1/users/ - getAllUsers - endpoint accessed");
-        return ResponseEntity.ok().body(userService.getAllUsers());
+        return ResponseEntity.ok().body(userService.getAllUsers(page, pageSize, field, sortDirection, userSearchDTO));
     }
 
     /**

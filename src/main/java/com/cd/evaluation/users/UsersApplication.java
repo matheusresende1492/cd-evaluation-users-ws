@@ -43,7 +43,7 @@ public class UsersApplication {
 						null,
 						null,
 						List.of(new UserRoleModel(RoleEnum.ROLE_ADMIN.toString())));
-				userMongoRepository.insert(userModel);
+				userMongoRepository.save(userModel);
 			}
 		};
 	}

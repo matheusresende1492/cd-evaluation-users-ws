@@ -1,12 +1,16 @@
 package com.cd.evaluation.users.service.user;
 
 import com.cd.evaluation.users.commons.converter.user.UserDTOConverter;
+import com.cd.evaluation.users.commons.converter.user.UserSearchDTOConverter;
 import com.cd.evaluation.users.exception.InternalException;
 import com.cd.evaluation.users.model.user.UserModel;
 import com.cd.evaluation.users.repository.user.UserMongoRepository;
 import com.cd.evaluation.users.view.users.UserDTO;
+import com.cd.evaluation.users.view.users.search.UserSearchDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -35,6 +38,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserDTOConverter userDTOConverter;
+
+    private final UserSearchDTOConverter userSearchDTOConverter;
 
     /**
      * Function to retrieve the user from the database for the springSecurity
@@ -69,8 +74,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * Function to retrieve the ALL user from the database
      */
     @Override
-    public List<UserDTO> getAllUsers() throws InternalException {
-        return userDTOConverter.convertToDTOList(userMongoRepository.findAll());
+    public Page<UserModel> getAllUsers(int page, int pageSize, String field, String sortDirection, UserSearchDTO userSearchDTO) throws InternalException {
+        Page<UserModel> dataToReturn;
+        Pageable pageable = StringUtils.isBlank(field)
+                ? PageRequest.of(page * pageSize, pageSize)
+                : PageRequest.of(page * pageSize, pageSize).withSort(Sort.by(Sort.Direction.fromString(sortDirection), field));
+        //Its necessary the null check because of the search conversion into model
+        if (Objects.isNull(userSearchDTO)) {
+            dataToReturn = userMongoRepository.findAll(pageable);
+        } else {
+            UserModel userModelForSearch = userSearchDTOConverter.convertToModelFromSearch(userSearchDTO);
+            Example<UserModel> userModelExample = Example.of(userModelForSearch, ExampleMatcher.matchingAll().withIgnoreCase());
+            dataToReturn = userMongoRepository.findAll(userModelExample, pageable);
+        }
+        //dataToReturn is never null because of the page interface
+        //Removing all passwords for security reasons
+        dataToReturn.getContent().forEach(userModel -> userModel.setPassword(null));
+        log.info("Retrieved users: {}", dataToReturn.getContent());
+        return dataToReturn;
     }
 
     /**
