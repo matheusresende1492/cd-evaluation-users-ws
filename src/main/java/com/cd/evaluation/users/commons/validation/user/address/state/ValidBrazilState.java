@@ -1,4 +1,4 @@
-package com.cd.evaluation.users.commons.validation.user.roles;
+package com.cd.evaluation.users.commons.validation.user.address.state;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = RoleValidation.class)
-public @interface ValidateRole {
-    String message() default "user.role.not.valid";
+@Constraint(validatedBy = BrazilStateValidation.class)
+public @interface ValidBrazilState {
+    String message() default "brazil.state.invalid";
     Class<?>[] groups() default {};
-    public abstract Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

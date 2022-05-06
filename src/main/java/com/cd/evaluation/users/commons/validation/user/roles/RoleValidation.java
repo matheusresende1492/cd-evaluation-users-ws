@@ -5,12 +5,11 @@ import com.cd.evaluation.users.model.enums.roles.RoleEnum;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
-import java.util.List;
 
-public class RoleValidation implements ConstraintValidator<ValidateRole, String> {
+public class RoleValidation implements ConstraintValidator<ValidRole, String> {
 
     @Override
-    public void initialize(ValidateRole constraintAnnotation) {
+    public void initialize(ValidRole constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
