@@ -13,6 +13,7 @@ public class RoleValidation implements ConstraintValidator<ValidRole, String> {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
+    //Validating if the role is present in the permitted list
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
         return Arrays.stream(RoleEnum.values()).anyMatch(roleEnum -> roleEnum.toString().equals(s));

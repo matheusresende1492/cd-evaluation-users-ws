@@ -12,6 +12,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User collection, using MongoDB database
+ */
 @Data
 @Document
 @AllArgsConstructor
@@ -23,6 +26,7 @@ public class UserModel {
 
     private String name;
 
+    //Making the email unique
     @Indexed(unique = true)
     private String email;
 

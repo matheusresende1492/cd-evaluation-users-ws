@@ -7,7 +7,6 @@ import com.cd.evaluation.users.repository.user.UserMongoRepository;
 import com.cd.evaluation.users.view.users.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +21,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * User business logic class
+ */
 @Service
 @Transactional
 @Slf4j
@@ -29,10 +31,15 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserMongoRepository userMongoRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final UserDTOConverter userDTOConverter;
 
+    /**
+     * Function to retrieve the user from the database for the springSecurity
+     * @param email username, in this application also the email
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         UserModel userModel = userMongoRepository.findByEmail(email).stream().findFirst().orElse(null);
@@ -47,24 +54,41 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return new org.springframework.security.core.userdetails.User(userModel.getEmail(), userModel.getPassword(), authorities);
     }
 
+    /**
+     * Function to retrieve the user from the database
+     * @param userId user's ID
+     */
     @Override
     public UserDTO getUserById(String userId) throws InternalException {
         UserModel userFound = userMongoRepository.findById(userId).stream().findFirst().orElse(null);
+        log.info("User found in the database: {}", userFound);
         return Objects.isNull(userFound) ? null : userDTOConverter.convertToDTO(userFound);
     }
 
+    /**
+     * Function to retrieve the ALL user from the database
+     */
     @Override
     public List<UserDTO> getAllUsers() throws InternalException {
         return userDTOConverter.convertToDTOList(userMongoRepository.findAll());
     }
 
+    /**
+     * Function to save the user in the database
+     * @param userDTO user payload
+     */
     @Override
     public UserDTO saveUser(UserDTO userDTO) throws InternalException {
         UserModel userModel = userDTOConverter.convertToModel(userDTO);
         userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
+        log.info("Saving user in the database: {}", userModel);
         return userDTOConverter.convertToDTO(userMongoRepository.save(userModel));
     }
 
+    /**
+     * Function to update the user in the database
+     * @param userDTO user payload
+     */
     @Override
     public UserDTO updateUser(UserDTO userDTO) throws InternalException {
         UserModel userModel = userDTOConverter.convertToModel(userDTO);
@@ -77,12 +101,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             log.error("Invalid user ID");
             throw new InternalException(InternalException.BAD_REQUEST_ERROR, HttpStatus.BAD_REQUEST);
         }
+        log.info("User found in the database: {}", userDTOFoundById);
+        log.info("Updating user in the database: {}", userModel);
         userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
         return userDTOConverter.convertToDTO(userMongoRepository.save(userModel));
     }
 
+    /**
+     * Function to delete the user from the database
+     * @param userId user's ID
+     */
     @Override
     public void deleteUser(String userId) throws InternalException {
+        log.info("Deleting user with ID: {}", userId);
         userMongoRepository.deleteById(userId);
     }
 }

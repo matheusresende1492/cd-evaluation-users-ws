@@ -16,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Security Config Class
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -36,11 +39,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        //Making some endpoint methods restricted for USER_ROLE profile
         http.authorizeRequests().antMatchers(HttpMethod.GET).hasAnyAuthority(RoleEnum.ROLE_ADMIN.toString(), RoleEnum.ROLE_USER.toString());
         http.authorizeRequests().antMatchers(HttpMethod.POST).hasAnyAuthority(RoleEnum.ROLE_ADMIN.toString());
         http.authorizeRequests().antMatchers(HttpMethod.PUT).hasAnyAuthority(RoleEnum.ROLE_ADMIN.toString());
         http.authorizeRequests().antMatchers(HttpMethod.DELETE).hasAnyAuthority(RoleEnum.ROLE_ADMIN.toString());
         http.authorizeRequests().anyRequest().authenticated();
+        //Authentication class
         http.addFilter(new CustomAuthenticationFilter(authenticationManager(), algorithmManager));
         http.addFilterBefore(new CustomAuthorizationFilter(algorithmManager), UsernamePasswordAuthenticationFilter.class);
     }

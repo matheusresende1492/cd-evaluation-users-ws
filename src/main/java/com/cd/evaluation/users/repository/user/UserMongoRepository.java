@@ -6,7 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * MongoDb data access layer
+ */
 @Repository
 public interface UserMongoRepository extends MongoRepository<UserModel, String> {
+    //Mongodb function to retrieve a user by the email
     Optional<UserModel> findByEmail(String email);
 }

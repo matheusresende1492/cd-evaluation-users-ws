@@ -27,6 +27,9 @@ import java.util.Map;
 
 import static java.util.Arrays.stream;
 
+/**
+ * Authorization Filter Class
+ */
 @Slf4j
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
@@ -44,6 +47,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 try {
+                    //Getting the token and verifying the user roles to see if the user has permission
                     String token = authorizationHeader.substring("Bearer ".length());
                     Algorithm algorithm = algorithmManager.retrieveAlgorithm();
                     JWTVerifier verifier = JWT.require(algorithm).build();
@@ -56,9 +60,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                         log.error(errorMessage);
                         throw new Exception(errorMessage);
                     }
-                    stream(roles).forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
+                    //Necessary to put the roles in a class that implements GrantedAuthority
+                    stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             email,
                             null,

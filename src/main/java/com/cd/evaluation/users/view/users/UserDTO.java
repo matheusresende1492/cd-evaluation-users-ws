@@ -11,10 +11,12 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * DTO class that will be populated by the user with field validation annotations
+ */
 @Data
 public class UserDTO {
 
- @Id
  private String id;
 
  @NotBlank(message = "user.name.must.not.be.null.or.empty")
@@ -32,6 +34,7 @@ public class UserDTO {
 
  private String phone;
 
+ //Profiles
  @NotNull(message = "user.roles.must.not.be.null")
  private List<UserRoleDTO> roles = new ArrayList<>();
 }

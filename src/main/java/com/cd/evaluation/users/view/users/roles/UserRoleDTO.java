@@ -7,6 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class UserRoleDTO {
+    //In the future, refactor the roles to a collection in the database
     @NotBlank
     @ValidRole(message = "invalid.role")
     private String role;

@@ -3,6 +3,9 @@ package com.cd.evaluation.users.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Custom Exception class to also handle the status code
+ */
 @Getter
 public class InternalException extends RuntimeException {
 

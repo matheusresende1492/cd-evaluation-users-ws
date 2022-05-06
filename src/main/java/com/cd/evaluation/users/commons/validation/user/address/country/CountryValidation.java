@@ -12,6 +12,7 @@ public class CountryValidation implements ConstraintValidator<ValidCountry, Stri
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
+    //Validating if the country is present in the permitted list
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
         return Arrays.stream(CountriesEnum.values()).anyMatch(country -> country.toString().equals(s));

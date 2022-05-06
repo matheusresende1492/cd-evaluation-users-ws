@@ -12,6 +12,7 @@ public class BrazilStateValidation implements ConstraintValidator<ValidBrazilSta
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 
+    //Validating if the brazil state is present in the permitted list
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
         return Arrays.stream(BrazilStateEnum.values()).anyMatch(brazilStateEnum -> brazilStateEnum.toString().equals(s));
