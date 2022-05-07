@@ -4,7 +4,9 @@ import com.cd.evaluation.users.commons.validation.user.address.country.ValidCoun
 import com.cd.evaluation.users.commons.validation.user.address.state.ValidBrazilState;
 import com.cd.evaluation.users.model.enums.address.BrazilStateEnum;
 import com.cd.evaluation.users.model.enums.address.CountriesEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
@@ -12,10 +14,12 @@ import javax.validation.constraints.NotBlank;
  * DTO users address class
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserAddressDTO {
 
     @NotBlank(message = "user.address.number.must.not.be.null.or.empty")
-    private Long number;
+    private int number;
 
     @NotBlank(message = "user.address.street.must.not.be.null.or.empty")
     private String street;

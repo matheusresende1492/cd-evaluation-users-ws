@@ -15,6 +15,8 @@ import java.util.List;
  * DTO class that will be populated by the user with field validation annotations
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
 
  private String id;

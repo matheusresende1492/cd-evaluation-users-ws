@@ -1,4 +1,4 @@
-package com.cd.evaluation.usersws;
+package com.cd.evaluation.users;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

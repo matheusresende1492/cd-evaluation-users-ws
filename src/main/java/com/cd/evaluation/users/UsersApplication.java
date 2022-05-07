@@ -1,5 +1,6 @@
 package com.cd.evaluation.users;
 
+import com.cd.evaluation.users.config.security.filter.algorithm.AlgorithmManager;
 import com.cd.evaluation.users.model.enums.roles.RoleEnum;
 import com.cd.evaluation.users.model.user.UserModel;
 import com.cd.evaluation.users.model.user.roles.UserRoleModel;

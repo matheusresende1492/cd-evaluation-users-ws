@@ -2,12 +2,16 @@ package com.cd.evaluation.users.model.user.address;
 
 import com.cd.evaluation.users.model.enums.address.BrazilStateEnum;
 import com.cd.evaluation.users.model.enums.address.CountriesEnum;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserAddressModel {
 
-    private Long number;
+    private int number;
 
     private String street;
 

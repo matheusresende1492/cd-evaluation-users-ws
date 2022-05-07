@@ -65,6 +65,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public UserDTO getUserById(String userId) throws InternalException {
+        if (Objects.isNull(userId)) {
+            log.error("User ID cannot be null.");
+            throw new InternalException(InternalException.BAD_REQUEST_ERROR, HttpStatus.BAD_REQUEST);
+        }
         UserModel userFound = userMongoRepository.findById(userId).stream().findFirst().orElse(null);
         log.info("User found in the database: {}", userFound);
         return Objects.isNull(userFound) ? null : userDTOConverter.convertToDTO(userFound);
@@ -100,6 +104,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public UserDTO saveUser(UserDTO userDTO) throws InternalException {
+        if (Objects.isNull(userDTO)) {
+            log.error("User payload cannot be null.");
+            throw new InternalException(InternalException.BAD_REQUEST_ERROR, HttpStatus.BAD_REQUEST);
+        }
         UserModel userModel = userDTOConverter.convertToModel(userDTO);
         userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
         log.info("Saving user in the database: {}", userModel);
@@ -112,6 +120,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public UserDTO updateUser(UserDTO userDTO) throws InternalException {
+        if (Objects.isNull(userDTO)) {
+            log.error("User payload cannot be null.");
+            throw new InternalException(InternalException.BAD_REQUEST_ERROR, HttpStatus.BAD_REQUEST);
+        }
         UserModel userModel = userDTOConverter.convertToModel(userDTO);
         if (Objects.isNull(userModel.getId())) {
             log.error("User payload and ID cannot be null.");
@@ -134,6 +146,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      */
     @Override
     public void deleteUser(String userId) throws InternalException {
+        if (Objects.isNull(userId)) {
+            log.error("User ID cannot be null.");
+            throw new InternalException(InternalException.BAD_REQUEST_ERROR, HttpStatus.BAD_REQUEST);
+        }
         log.info("Deleting user with ID: {}", userId);
         userMongoRepository.deleteById(userId);
     }

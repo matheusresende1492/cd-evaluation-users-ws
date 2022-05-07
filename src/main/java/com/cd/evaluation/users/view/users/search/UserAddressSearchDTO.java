@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserAddressSearchDTO {
-    private Long number;
+    private int number;
 
     private String street;
 

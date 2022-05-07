@@ -6,6 +6,8 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRoleDTO {
     //In the future, refactor the roles to a collection in the database
     @NotBlank
